@@ -9,7 +9,7 @@ import React, {
 import { useKey, useMeasure } from 'react-use';
 import tinycolor from 'tinycolor2';
 type Point = [number, number];
-interface Cooridante {
+export interface Cooridante {
   title?: string;
   tag: Tag;
   absolutePoints: Point[];
@@ -21,25 +21,35 @@ interface Tag {
   color: string;
 }
 
-interface Coordinates {
+export interface Coordinates {
   title: string;
   points: Point[];
   tag: string;
 }
 
-export interface ImageAnnoateProps {
+interface CommonImageAnnotateProps {
   imgSrc: string;
   onChange?: (coordinates: Coordinates[]) => void;
   tags?: Tag[];
   enableAnnotate?: boolean;
 }
+export interface ImageAnnoateProps extends CommonImageAnnotateProps {
+  type?: 'inside';
+}
 
-export const ImageAnnotate: React.FC<ImageAnnoateProps> = ({
-  imgSrc,
-  tags,
-  enableAnnotate,
-  onChange,
-}) => {
+export interface ImageAnnoteOutsideProps extends CommonImageAnnotateProps {
+  type?: 'outside';
+  cordinates: Cooridante[];
+  setCoordinates: React.Dispatch<React.SetStateAction<Cooridante[]>>;
+}
+
+export const ImageAnnotate: React.FC<
+  ImageAnnoteOutsideProps | ImageAnnoateProps
+> = ({ imgSrc, tags, enableAnnotate, onChange, ...props }) => {
+  const [cords, setCords] = useState<Cooridante[]>([]);
+  const cordinates = props.type === 'outside' ? props.cordinates : cords;
+  const setCoordinates =
+    props.type === 'outside' ? props.setCoordinates : setCords;
   const tgs = useMemo(() => {
     return (
       tags || [
@@ -71,8 +81,6 @@ export const ImageAnnotate: React.FC<ImageAnnoateProps> = ({
   } | null>(null);
 
   const [imageRef, dimension] = useMeasure();
-
-  const [cordinates, setCoordinates] = useState<Cooridante[]>([]);
 
   const [showInput, setShowInput] = useState(false);
 
@@ -381,4 +389,8 @@ export const ImageAnnotate: React.FC<ImageAnnoateProps> = ({
       </div>
     </div>
   );
+};
+
+ImageAnnotate.defaultProps = {
+  type: 'inside',
 };
