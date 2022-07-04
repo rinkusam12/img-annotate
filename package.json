@@ -3,6 +3,9 @@
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/rinkusam12/img-annotate"
+  },
   "files": [
     "dist",
     "src"
