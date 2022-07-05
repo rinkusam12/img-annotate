@@ -24,32 +24,30 @@ interface Tag {
 export interface Coordinates {
   title: string;
   points: Point[];
-  tag: string;
+  tag: Tag;
 }
 
-interface CommonImageAnnotateProps {
+export interface CommonImageAnnotateProps {
   imgSrc: string;
   onChange?: (coordinates: Coordinates[]) => void;
   tags?: Tag[];
   enableAnnotate?: boolean;
-}
-export interface ImageAnnoateProps extends CommonImageAnnotateProps {
-  type?: 'inside';
+  cordinates?: Cooridante[];
 }
 
-export interface ImageAnnoteOutsideProps extends CommonImageAnnotateProps {
-  type?: 'outside';
-  cordinates: Cooridante[];
-  setCoordinates: React.Dispatch<React.SetStateAction<Cooridante[]>>;
-}
 
 export const ImageAnnotate: React.FC<
-  ImageAnnoteOutsideProps | ImageAnnoateProps
+  CommonImageAnnotateProps
 > = ({ imgSrc, tags, enableAnnotate, onChange, ...props }) => {
-  const [cords, setCords] = useState<Cooridante[]>([]);
-  const cordinates = props.type === 'outside' ? props.cordinates : cords;
-  const setCoordinates =
-    props.type === 'outside' ? props.setCoordinates : setCords;
+  const [cordinates, setCoordinates] = useState<Cooridante[]>(props.cordinates || []);
+
+
+  useEffect(() => {
+    if (props.cordinates) {
+      setCoordinates(props.cordinates)
+    }
+  }, [props.cordinates])
+
   const tgs = useMemo(() => {
     return (
       tags || [
@@ -104,7 +102,7 @@ export const ImageAnnotate: React.FC<
         return {
           title: c.title || '',
           points: c.absolutePoints,
-          tag: c.tag?.title,
+          tag: c.tag,
         };
       })
     );
@@ -346,19 +344,19 @@ export const ImageAnnotate: React.FC<
                 points={
                   c.pathClosed
                     ? [...c?.absolutePoints, c.absolutePoints[0]]
-                        .map(x => [
-                          x[0] * dimension.width,
-                          x[1] * dimension.height,
-                        ])
-                        .map(z => z.join(','))
-                        .join(' ')
+                      .map(x => [
+                        x[0] * dimension.width,
+                        x[1] * dimension.height,
+                      ])
+                      .map(z => z.join(','))
+                      .join(' ')
                     : c?.absolutePoints
-                        .map(x => [
-                          x[0] * dimension.width,
-                          x[1] * dimension.height,
-                        ])
-                        .map(z => z.join(','))
-                        .join(' ')
+                      .map(x => [
+                        x[0] * dimension.width,
+                        x[1] * dimension.height,
+                      ])
+                      .map(z => z.join(','))
+                      .join(' ')
                 }
                 style={{
                   fill: tinycolor(c?.tag?.color || '#000')
@@ -392,5 +390,5 @@ export const ImageAnnotate: React.FC<
 };
 
 ImageAnnotate.defaultProps = {
-  type: 'inside',
+  cordinates: [],
 };

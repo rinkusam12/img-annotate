@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/react';
 import { useState } from 'react';
-import { Cooridante, ImageAnnoateProps, ImageAnnotate } from '../src';
+import { CommonImageAnnotateProps, Cooridante, ImageAnnotate } from '../src';
 
 const meta: Meta = {
   title: 'ImageAnnotate',
@@ -9,16 +9,17 @@ const meta: Meta = {
 
 export default meta;
 
-const Template = (args: ImageAnnoateProps) => {
+const Template = (args: CommonImageAnnotateProps) => {
   const [cords, setCords] = useState<Cooridante[]>([]);
   return (
     <div style={{ maxWidth: '700px' }}>
       <ImageAnnotate
-        type="outside"
         cordinates={cords}
-        setCoordinates={setCords}
         {...args}
       />
+      <button onClick={() => {
+        setCords([]);
+      }}>Reset</button>
     </div>
   );
 };

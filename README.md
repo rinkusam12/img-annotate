@@ -14,28 +14,9 @@ Clone with following command:
 `npm run storybook`
 
 ### Available Props
-
-type: "inside" | "outside"
+cordinates?: Cooridante[];
 onChange?: (coordinates: Coordinates[]) => void;
 tags?: Tag[];
 enableAnnotate?: boolean;
 
-If type = 'outside' you must provide props
-cordinates: Cooridante[];
-setCoordinates: React.Dispatch<React.SetStateAction<Cooridante[]>>;
-
-type Point = [number, number];
-
-interface Cooridante {
-  title?: string;
-  tag: Tag;
-  absolutePoints: Point[];
-  pathClosed: boolean;
-}
-
-/*One on onChange not to be confused with Cooridante*/
-interface Coordinates {
-  title: string;
-  points: Point[];
-  tag: string;
-}
+Update on props for better setup
