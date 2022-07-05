@@ -18,5 +18,5 @@ cordinates?: Cooridante[];
 onChange?: (coordinates: Coordinates[]) => void;
 tags?: Tag[];
 enableAnnotate?: boolean;
-
+//
 Update on props for better setup
